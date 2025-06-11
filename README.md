@@ -1,6 +1,7 @@
 # CDP DataHub Airflow Operator
 
-This package provides an Airflow operator for managing CDP DataHub clusters.
+This repo provides an Airflow operator for managing CDP DataHub clusters. It is based on CDP CLI for interacting with CDP datahub cluster.
+Hence has dependecy on installing cdp cli
 
 ## Installation
 
@@ -13,50 +14,11 @@ pip install -r requirements.txt
 
 ## Usage
 
-Here's an example of how to use the operator in your Airflow DAG:
+The sample_cdp_datahub_dag.py (https://github.com/nrladdha/CDP_Airflow/blob/main/dags/sample_cdp_datahub_dag.py) provides example of how to use the operator in your Airflow DAG. It supports two operations - start & stop data hub cluster.
 
-```python
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from cdp_datahub_operator import CDPDataHubOperator
-from datetime import datetime, timedelta
+Typical Airflow DAG will add task using CDPDataHubOperator to start datahub cluster, then execute required jobs in the cluster (note this repo does not include operator for job execution - .eg. Spark-LiveOperator, you can use existing operators). Once job is finished then add task using same CDPDataHubOperator to stop the datahub cluster.
 
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
 
-with DAG(
-    'cdp_datahub_operations',
-    default_args=default_args,
-    description='Manage CDP DataHub cluster',
-    schedule_interval=timedelta(days=1),
-    start_date=datetime(2024, 1, 1),
-    catchup=False,
-) as dag:
-
-    start_cluster = CDPDataHubOperator(
-        task_id='start_cluster',
-        cluster_name='my-cluster',
-        environment_name='my-environment',
-        operation='start',
-        wait_for_cluster=True,
-        cluster_wait_timeout=1800,  # 30 minutes
-    )
-
-    stop_cluster = CDPDataHubOperator(
-        task_id='stop_cluster',
-        cluster_name='my-cluster',
-        environment_name='my-environment',
-        operation='stop',
-    )
-
-    start_cluster >> stop_cluster
-```
 
 ## Parameters
 
