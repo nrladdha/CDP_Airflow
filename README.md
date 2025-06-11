@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-The sample_cdp_datahub_dag.py (https://github.com/nrladdha/CDP_Airflow/blob/main/dags/sample_cdp_datahub_dag.py) provides example of how to use the operator in your Airflow DAG. It supports two operations - start & stop data hub cluster.
+The [sample_cdp_datahub_dag.py] (https://github.com/nrladdha/CDP_Airflow/blob/main/dags/sample_cdp_datahub_dag.py) from dags folder provides example of how to use the operator in your Airflow DAG. It supports two operations - start & stop data hub cluster.
 
 Typical Airflow DAG will add task using CDPDataHubOperator to start datahub cluster, then execute required jobs in the cluster (note this repo does not include operator for job execution - .eg. Spark-LiveOperator, you can use existing operators). Once job is finished then add task using same CDPDataHubOperator to stop the datahub cluster.
 
